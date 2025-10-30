@@ -38,8 +38,8 @@ BEGIN
             CASE WHEN UPPER(TRIM(cst_gndr)) = 'M' THEN 'Male'
                  WHEN UPPER(TRIM(cst_gndr)) = 'F' THEN 'Female'
                  ELSE 'N/A' END,
-            CASE WHEN UPPER(TRIM(cst_material_status)) = 'M' THEN 'Married'
-                 WHEN UPPER(TRIM(cst_material_status)) = 'S' THEN 'Single'
+            CASE WHEN UPPER(TRIM(cst_marital_status)) = 'M' THEN 'Married'
+                 WHEN UPPER(TRIM(cst_marital_status)) = 'S' THEN 'Single'
                  ELSE 'Unknown' END,
             cst_create_date
         FROM (
