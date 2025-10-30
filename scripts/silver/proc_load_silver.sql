@@ -1,3 +1,42 @@
+-- FIRST RUN THIS MODIFIED TABLE QUERY
+
+IF OBJECT_ID('silver.crm_prd_info', 'U') IS NOT NULL
+    DROP TABLE silver.crm_prd_info;
+
+CREATE TABLE silver.crm_prd_info (
+    prd_id       INT,
+    cat_id       NVARCHAR(50),
+    prd_key      NVARCHAR(50),
+    prd_nm       NVARCHAR(50),
+    prd_cost     INT,
+    prd_line     NVARCHAR(50),
+    prd_start_dt DATE,
+    prd_end_dt   DATE,
+    dwh_create_date DATETIME2 DEFAULT GETDATE()
+);
+
+GO
+
+IF OBJECT_ID('silver.crm_sales_details', 'U') IS NOT NULL
+    DROP TABLE silver.crm_sales_details;
+GO
+
+CREATE TABLE silver.crm_sales_details (
+    sls_ord_num      NVARCHAR(50),  -- Sales order number (business key)
+    sls_prd_key      NVARCHAR(50),  -- Product key (foreign key reference)
+    sls_cust_id      INT,           -- Customer ID (foreign key reference)
+    sls_order_dt     DATE,          -- Order date (cleansed from numeric format)
+    sls_ship_dt      DATE,          -- Ship date (cleansed from numeric format)
+    sls_due_dt       DATE,          -- Due date (cleansed from numeric format)
+    sls_sales        INT,           -- Total sales amount (calculated/validated)
+    sls_quantity     INT,           -- Quantity sold
+    sls_price        INT,           -- Unit price (calculated/validated)
+    dwh_create_date  DATETIME2 DEFAULT GETDATE()  -- Audit: record load timestamp
+);
+
+GO
+
+
 CREATE OR ALTER PROCEDURE silver.load_silver
 AS
 BEGIN
@@ -28,7 +67,7 @@ BEGIN
 
         TRUNCATE TABLE silver.crm_cust_info;
         INSERT INTO silver.crm_cust_info (
-            cst_id, cst_key, cst_firstname, cst_lastname, cst_material_status, cst_gndr, cst_create_date
+            cst_id, cst_key, cst_firstname, cst_lastname, cst_marital_status, cst_gndr, cst_create_date
         )
         SELECT
             cst_id,
